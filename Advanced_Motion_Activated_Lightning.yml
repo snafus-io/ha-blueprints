@@ -218,13 +218,7 @@ condition:
   # Check if elevation input exist or is below desired value, otherwise do not run
   - condition: template
     value_template: "{{ (elevation_check == none) or (state_attr('sun.sun','elevation') <= elevation_check | float(90)) }}"
-  - condition: or
-    conditions:
-      - "{{ illuminance_currently == 'none' }}"
-      - "{{ illuminance_cutoff == 'none' }}"
-      - "{{ illuminance_currently == 'unknown' }}"
-      - "{{ illuminance_cutoff == 'unknown' }}"
-      - "{{ states[illuminance_currently].state | float(default=0) < states[illuminance_cutoff].state | float(default=0) }}"
+ 
 
 action:
   - choose:
@@ -233,8 +227,15 @@ action:
           - condition: template
             value_template: "{{ trigger.to_state.state == 'on' }}" 
           #added from other blueprint
-          - condition: template
-            value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
+          - condition: or
+            conditions:
+              - "{{ illuminance_currently == 'none' }}"
+              - "{{ illuminance_cutoff == 'none' }}"
+              - "{{ states[illuminance_currently].state is none }}"
+              - "{{ states[illuminance_cutoff].state is none }}"
+              - "{{ states[illuminance_currently].state | default(0) | float < states[illuminance_cutoff].state | default(0) | float }}"
+          #- condition: template
+          #  value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
           #till here
         sequence:
           - choose:
