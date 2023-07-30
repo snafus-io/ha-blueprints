@@ -180,8 +180,6 @@ max_exceeded: silent
 variables:
   illuminance_currently: !input illuminance_sensor
   illuminance_cutoff: !input illuminance_cutoff
-  illuminance_current_value: "{{ states(illuminance_currently) if illuminance_currently != 'none' and states(illuminance_currently) != None else '0' }}"
-  illuminance_cutoff_value: "{{ states('input_number.' + illuminance_cutoff) if illuminance_cutoff != 'none' and states('input_number.' + illuminance_cutoff) != None else '0' }}"
 
   scene_ambient: !input scene_ambient
   scene_morning: !input scene_morning
@@ -228,11 +226,8 @@ action:
             value_template: "{{ trigger.to_state.state == 'on' }}" 
           #added from other blueprint
           - condition: template
-            value_template: >-
-              {{ (illuminance_currently == 'none' or states(illuminance_currently) == None) or 
-                 (illuminance_cutoff == 'none' or states('input_number.' + illuminance_cutoff) == None) or 
-                 (illuminance_currently != 'none' and states(illuminance_currently) != None and states('input_number.' + illuminance_cutoff) != None and 
-                 states(illuminance_currently).state | float < states('input_number.' + illuminance_cutoff).state | float) }}
+            value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
+
 
 
 
