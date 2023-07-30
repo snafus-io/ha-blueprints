@@ -180,8 +180,9 @@ max_exceeded: silent
 variables:
   illuminance_currently: !input illuminance_sensor
   illuminance_cutoff: !input illuminance_cutoff
-  illuminance_current_value: "{{ states(illuminance_currently) if states(illuminance_currently) != 'none' else '0' }}"
-  illuminance_cutoff_value: "{{ states('input_number.' + illuminance_cutoff) if states('input_number.' + illuminance_cutoff) != 'none' else '0' }}"
+  illuminance_current_value: "{{ states(illuminance_currently) if illuminance_currently != 'none' and states(illuminance_currently) != None else '0' }}"
+  illuminance_cutoff_value: "{{ states('input_number.' + illuminance_cutoff) if illuminance_cutoff != 'none' and states('input_number.' + illuminance_cutoff) != None else '0' }}"
+
   scene_ambient: !input scene_ambient
   scene_morning: !input scene_morning
   scene_day: !input scene_day
