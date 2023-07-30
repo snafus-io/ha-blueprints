@@ -228,9 +228,11 @@ action:
           #added from other blueprint
           - condition: template
             value_template: >-
-              {{ (illuminance_currently == 'none' or states(illuminance_currently) == 'none') or 
-                 (illuminance_cutoff == 'none' or states('input_number.' + illuminance_cutoff) == 'none') or 
-                 (states(illuminance_currently) | float < states('input_number.' + illuminance_cutoff) | float) }}
+              {{ (illuminance_currently == 'none' or states(illuminance_currently) == None) or 
+                 (illuminance_cutoff == 'none' or states('input_number.' + illuminance_cutoff) == None) or 
+                 (illuminance_currently != 'none' and states(illuminance_currently) != None and states('input_number.' + illuminance_cutoff) != None and 
+                 states(illuminance_currently) | float < states('input_number.' + illuminance_cutoff) | float) }}
+
 
             
           # value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff_value == 'none') or (illuminance_current_value < illuminance_cutoff_value) }}"
