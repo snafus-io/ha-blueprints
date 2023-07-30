@@ -22,7 +22,7 @@ blueprint:
      - Default scene when motion stops (optional)
      - “No motion blocker” with a user-choosable state (optional)
 
-    ---
+
   domain: automation
   source_url: https://gist.github.com/networkingcat/a1876d7e706e07c8bdcf974113940fb8
   input:
@@ -37,10 +37,11 @@ blueprint:
         target:
           entity:
             domain: light
+#added from other blueprint
     illuminance_sensor:
       name: (OPTIONAL) Illuminance sensor
       description: This sensor will be used to determine the illumination.
-      default: none
+      default:
       selector:
         entity:
           domain: sensor
@@ -48,17 +49,14 @@ blueprint:
     illuminance_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: This input_number will be used to compare to the current illumination to determine if it is low.
-      default: 'none'
+      default:
       selector:
-        number:
-          min: 0
-          max: 1000
-          unit_of_measurement: lux
-          mode: box
-
+        entity:
+          domain: input_number
+#till here
     no_motion_wait:
       name: Wait time
-      description: Time to leave the light on after the last motion is detected.
+      description: Time to leave the light on after last motion is detected.
       default: 120
       selector:
         number:
@@ -67,25 +65,25 @@ blueprint:
           unit_of_measurement: seconds            
     automation_blocker:
       name: Automation Blocker (Optional)
-      description: Only run if this boolean is in the desired state (see next input)
-      default: none
+      description: Only run if this boolean is in desired state (see next input)
+      default:
       selector:
         entity:
     automation_blocker_boolean:
       name: Automation Blocker Chooser (Optional)
-      description: Desired state of the automation blocker, choose 'on' for on and 'off' for off
+      description: Desired state of automation blocker, choose on for on and off for off
       default: false
       selector:
         boolean: 
     no_motion_blocker:
       name: No Motion Blocker (Optional)
-      description: The no motion sequence is not run if this boolean is in the desired state (see next input)
-      default: none
+      description: No motion sequence is not run if this boolean is in desired state (see next input)
+      default:
       selector:
         entity:
     no_motion_blocker_boolean:
       name: No Motion Chooser (Optional)
-      description: Desired state of the no motion blocker, choose 'on' for on and 'off' for off
+      description: Desired state of no motion blocker, choose on for on and off for off
       default: false
       selector:
         boolean:         
@@ -100,20 +98,20 @@ blueprint:
           unit_of_measurement: degrees
     scene_ambient:
       name: Ambient Scene (Optional)
-      description: Scene for the ambient state. Will be activated when no motion is detected.
+      description: Scene for ambient state. Will be activated when no motion is detected.
       default: scene.none
       selector:
         entity:
           domain: scene
     time_scene_ambient_start:
       name: Ambient time frame start (Optional)
-      description: Time from which on the ambient scene will be activated
+      description: Time from which on ambient scene will be activated
       default: "00:00:00"
       selector:
         time:
     time_scene_ambient_end:
       name: Ambient time frame end (Optional)
-      description: Time from which on the ambient scene will not be activated
+      description: Time from which on ambient scene will be not activated
       default: "00:00:00"
       selector:
         time:
@@ -125,7 +123,7 @@ blueprint:
           domain: scene
     time_scene_morning:
       name: Time for the morning scene (Optional)
-      description: A time input that defines the time from which on the scene will be activated if motion is detected.
+      description: A time input which defines the time from which on the scene will be activated if motion is detected.
       default: "00:00:00"
       selector:
         time:
@@ -137,7 +135,7 @@ blueprint:
           domain: scene
     time_scene_day:
       name: Time for the day scene (Optional)
-      description: A time input that defines the time from which on the scene will be activated if motion is detected.
+      description: A time input which defines the time from which on the scene will be activated if motion is detected.
       default: "08:00:00"
       selector:
         time:
@@ -149,7 +147,7 @@ blueprint:
           domain: scene
     time_scene_evening:
       name: Time for the evening scene (Optional)
-      description: A time input that defines the time from which on the scene will be activated if motion is detected.
+      description: A time input which defines the time from which on the scene will be activated if motion is detected.
       default: "21:00:00"
       selector:
         time:
@@ -161,7 +159,7 @@ blueprint:
           domain: scene
     time_scene_night:
       name: Time for the night scene (Optional)
-      description: A time input that defines the time from which on the scene will be activated if motion is detected.
+      description: A time input which defines the time from which on the scene will be activated if motion is detectedd.
       default: "23:00:00"
       selector:
         time:
@@ -178,22 +176,22 @@ mode: restart
 max_exceeded: silent
 
 variables:
-  illuminance_currently: "{{ illuminance_sensor if illuminance_sensor != 'none' else none }}"
-  illuminance_cutoff: "{{ illuminance_cutoff | int if illuminance_cutoff != 'none' else none }}"
+#added from other blueprint
+  illuminance_currently: !input illuminance_sensor
+  illuminance_cutoff: !input illuminance_cutoff
+#till here
   scene_ambient: !input scene_ambient
   scene_morning: !input scene_morning
   scene_day: !input scene_day
   scene_evening: !input scene_evening
   scene_night: !input scene_night
   automation_blocker: !input automation_blocker
-  automation_blocker_boolean: !input automation_blocker_boolean
+  automation_blocker_boolean : !input automation_blocker_boolean
   no_motion_blocker: !input no_motion_blocker
   no_motion_blocker_boolean: !input no_motion_blocker_boolean
   elevation_check: !input elevation_check
   scene_no_motion: !input scene_no_motion
   motion_entity: !input motion_entity
-  illuminance_sensor: !input illuminance_sensor
-  illuminance_cutoff: !input illuminance_cutoff
 
 trigger:
   - platform: state
@@ -209,16 +207,15 @@ trigger:
 
 # All Conditions must be true
 condition:
-   # Check if automation blocker exists or is in the desired state, otherwise do not run
+   # Check if automation blocker exist or is in desired state, otherwise do not run
   - condition: or
     conditions:
       - "{{ automation_blocker == none }}"
       - "{{ automation_blocker_boolean and states[automation_blocker].state == 'on' }}"
       - "{{ not automation_blocker_boolean and states[automation_blocker].state == 'off' }}"
-  # Check if elevation input exists or is below the desired value, otherwise do not run
+  # Check if elevation input exist or is below desired value, otherwise do not run
   - condition: template
     value_template: "{{ (elevation_check == none) or (state_attr('sun.sun','elevation') <= elevation_check | float(90)) }}"
- 
 
 action:
   - choose:
@@ -226,17 +223,10 @@ action:
       - conditions:
           - condition: template
             value_template: "{{ trigger.to_state.state == 'on' }}" 
-          # Illuminance-based condition (only if both variables are provided and not 'none')
-          - condition: or
-            conditions:
-              # Check if illuminance_sensor is a valid entity and its state is less than illuminance_cutoff
-              - condition: template
-                value_template: >-
-                  {% if illuminance_sensor != 'none' and illuminance_cutoff != 'none' and states[illuminance_sensor] is not none %}
-                    {{ states[illuminance_sensor].state | float < illuminance_cutoff | float }}
-                  {% else %}
-                    true
-                  {% endif %}
+          #added from other blueprint
+          - condition: template
+            value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < illuminance_cutoff | int) }}"
+          #till here
         sequence:
           - choose:
               # Morning Scene
@@ -279,7 +269,7 @@ action:
       - conditions:
           - condition: template
             value_template: "{{ trigger.to_state.state == 'off' }}"
-          # Check if no motion blocker exists or is in the desired state, otherwise do not run any no motion action            
+          # Check if no motion blocker exist or in in desired state, otherwise do not run any no motion action            
           - condition: or
             conditions:
               - "{{ no_motion_blocker == none }}"
@@ -287,7 +277,7 @@ action:
               - "{{ not no_motion_blocker_boolean and states[no_motion_blocker].state == 'off' }}"
         sequence:          
           - choose:
-              # Used if ambient scene is true and in the ambient scene time frame
+              # Used if ambient scene is true and in ambient scene time frame
               - conditions:
                   - "{{ scene_ambient != 'scene.none' }}"
                   - condition: time
@@ -295,7 +285,7 @@ action:
                     before: !input time_scene_ambient_end
                 sequence:
                   - scene: !input scene_ambient
-              # Used if the default no motion scene is set
+              # Used if default no motion scene is set
               - conditions:
                   - "{{ scene_no_motion != 'scene.none' }}"
                 sequence:
