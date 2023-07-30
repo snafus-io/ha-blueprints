@@ -1,7 +1,10 @@
+
+
+
 blueprint:
   name: My Personal Motion Activation Blueprint
   description: >
-    # YAMA V10
+    # YAMA Radio Mod V10
 
 
     Turn on lights or scenes when motion is detected. 
@@ -24,6 +27,7 @@ blueprint:
      - Ambient support with time frame (optional)
      - Default scene when motion stops (optional)
      - “no motion blocker” with user choosable state (optional)
+     - Play Radio if Motion detected
   domain: automation
 #  source_url: https://gist.github.com/networkingcat/a1876d7e706e07c8bdcf974113940fb8
   input:
@@ -185,6 +189,9 @@ blueprint:
       selector:
         entity:
           domain: media_player
+    radio_url:
+      name: "Radio URL"
+      initial: "http://example.com/stream.url"  # Setze hier die Standard-URL deines bevorzugten Radiosenders
     morning_time:
       name: "Radio Volume (Morning)"
       description: "When does the morning time start?"
@@ -342,12 +349,16 @@ action:
               - choose:
               - conditions: "{{ now().strftime('%H:%M:%S') < morning_time }}"
                 sequence:
-                - service: media_player.turn_on
-                  entity_id: !input radio_target
                 - service: media_player.volume_set
                   entity_id: !input radio_target
                   data:
                     volume_level: "{{ (morning_volume|float) / 100 }}"
+                - service: media_player.play_media
+                  data:
+                    entity_id: !input radio_target
+                    media_content_id: "{{ states('input_text.radio_url.state') }}"
+                    media_content_type: "music"
+                
               
       - conditions: "{{ now().strftime('%H:%M:%S') >= morning_time and now().strftime('%H:%M:%S') < daytime_time }}"
         sequence:
