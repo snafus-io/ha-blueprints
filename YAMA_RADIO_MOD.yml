@@ -51,8 +51,9 @@ blueprint:
       description: This input_number will be used to compare to the current illumination to determine if it is low.
       default:
       selector:
-        entity:
-          domain: input_number
+        number:
+          min: 0
+          unit_of_measurement: lx
     no_motion_wait:
       name: Wait time
       description: Time to leave the light on after last motion is detected.
