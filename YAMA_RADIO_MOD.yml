@@ -332,14 +332,7 @@ action:
               - "{{ no_motion_blocker == none }}"
               - "{{ no_motion_blocker_boolean and states[no_motion_blocker].state == 'on' }}"
               - "{{ not no_motion_blocker_boolean and states[no_motion_blocker].state == 'off' }}"
-        sequence:
-          - choose:
-            - conditions:
-                - "{{ media_player_entity != none }}"
-              sequence:
-                - service: media_player.media_stop
-                  data:
-                    entity_id: !input media_player_entity        
+        sequence:      
           - choose:
               # Used if ambient scene is true and in ambient scene time frame
               - conditions:
@@ -358,3 +351,6 @@ action:
             default:
               - service: light.turn_off
                 target: !input light_target
+              - service: media_player.media_stop
+                  data:
+                    entity_id: !input media_player_entity
