@@ -42,7 +42,7 @@ blueprint:
     illuminance_sensor:
       name: (OPTIONAL) Illuminance sensor
       description: This sensor will be used to determine the illumination.
-      default:
+      default: none
       selector:
         entity:
           domain: sensor
@@ -50,7 +50,6 @@ blueprint:
     illuminance_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: This input_number will be used to compare to the current illumination to determine if it is low.
-      default: 5
       selector:
         number:
           min: 0
