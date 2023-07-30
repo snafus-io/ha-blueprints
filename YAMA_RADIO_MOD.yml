@@ -362,10 +362,6 @@ action:
               
       - conditions: "{{ now().strftime('%H:%M:%S') >= morning_time and now().strftime('%H:%M:%S') < daytime_time }}"
         sequence:
-          - service: media_player.volume_set
-            entity_id: !input radio_target
-            data:
-              volume_level: "{{ (daytime_volume|float) / 100 }}"
           - service: media_player.play_media
             data:
               entity_id: !input radio_target
