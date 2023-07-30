@@ -380,10 +380,10 @@ action:
               - service: light.turn_on
                 target: !input light_target
               - service: media_player.play_media
-                  data:
-                    entity_id: !input radio_target
-                    media_content_id: "{{ states('input_text.radio_url') }}"
-                    media_content_type: "music"
+                data:
+                  entity_id: !input radio_target
+                  media_content_id: "{{ states('input_text.radio_url') }}"
+                  media_content_type: "music"
       # Trigger to state = "off"
       - conditions:
           - condition: template
