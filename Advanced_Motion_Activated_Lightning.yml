@@ -225,7 +225,7 @@ condition:
       - "{{ illuminance_currently == 'unknown' }}"
       - "{{ illuminance_cutoff == 'unknown' }}"
       - >-
-        {%- if states[illuminance_currently].state | float and states[illuminance_cutoff].state | float -%}
+        {%- if states[illuminance_currently] is defined and states[illuminance_cutoff] is defined -%}
           {%- set illum_current = states[illuminance_currently].state | float -%}
           {%- set illum_cutoff = states[illuminance_cutoff].state | float -%}
           {{ illum_current < illum_cutoff }}
