@@ -183,7 +183,7 @@ blueprint:
     media_url:
       name: Media URL (Optional)
       description: The URL of the media to play.
-      default:
+      default: "x-rincon-mp3radio://www.antennebrandenburg.de/live.m3u"
       selector:
         text:
 
@@ -351,5 +351,7 @@ action:
             default:
               - service: light.turn_off
                 target: !input light_target
-              - service: media_player.media_pause
+              service: media_player.media_stop
+              data: {}
+              target:
                 entity_id: !input media_player_entity
