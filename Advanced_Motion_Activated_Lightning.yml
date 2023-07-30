@@ -218,6 +218,11 @@ condition:
   # Check if elevation input exist or is below desired value, otherwise do not run
   - condition: template
     value_template: "{{ (elevation_check == none) or (state_attr('sun.sun','elevation') <= elevation_check | float(90)) }}"
+  - condition: or
+    conditions:
+      - "{{ illuminance_currently == 'none' }}"
+      - "{{ illuminance_cutoff == 'none' }}"
+      - "{{ states[illuminance_currently].state | int < states[illuminance_cutoff].state | int }}"
 
 action:
   - choose:
