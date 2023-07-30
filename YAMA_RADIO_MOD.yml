@@ -351,7 +351,6 @@ action:
             default:
               - service: light.turn_off
                 target: !input light_target
-              - service: media_player.media_stop
-                data: {}
+              - service: media_player.media_pause
                 target:
                   entity_id: !input media_player_entity
