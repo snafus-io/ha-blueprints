@@ -231,9 +231,13 @@ action:
             conditions:
               - "{{ illuminance_currently == 'none' }}"
               - "{{ illuminance_cutoff == 'none' }}"
-              - "{{ states[illuminance_currently].state is none }}"
-              - "{{ states[illuminance_cutoff].state is none }}"
-              - "{{ states[illuminance_currently].state | default(0) | float < states[illuminance_cutoff].state | default(0) | float }}"
+              - condition: template
+                value_template: >-
+                  {% if illuminance_currently is defined and illuminance_cutoff is defined %}
+                    {{ states[illuminance_currently] is not none and states[illuminance_currently].state | float < states[illuminance_cutoff].state | float }}
+                  {% else %}
+                    true
+                  {% endif %}
           #- condition: template
           #  value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
           #till here
