@@ -227,8 +227,8 @@ action:
             value_template: "{{ trigger.to_state.state == 'on' }}" 
           #added from other blueprint
           - condition: template
-             value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff == 'none') or (illuminance_current_value | float < illuminance_cutoff_value | float) }}"
-          #  value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff_value == 'none') or (illuminance_current_value < illuminance_cutoff_value) }}"
+            value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff == 'none') or (illuminance_current_value | float < illuminance_cutoff_value | float) }}"
+          # value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff_value == 'none') or (illuminance_current_value < illuminance_cutoff_value) }}"
           # value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}" # Original
           # value_template: "{{ states('sensor.bad_bewegungsmelder_illuminance')|float(0) < 5.0 }}"  # Alternate
 
