@@ -191,7 +191,7 @@ blueprint:
           domain: media_player
     radio_url:
       name: "Radio URL"
-      initial: "http://example.com/stream.url"  # Setze hier die Standard-URL deines bevorzugten Radiosenders
+      default: "http://example.com/stream.url"  # Setze hier die Standard-URL deines bevorzugten Radiosenders
     morning_time:
       name: "Radio Volume (Morning)"
       description: "When does the morning time start?"
