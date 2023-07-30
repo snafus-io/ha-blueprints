@@ -226,7 +226,8 @@ action:
             value_template: "{{ trigger.to_state.state == 'on' }}" 
           #added from other blueprint
           - condition: template
-            value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
+            #value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < states[illuminance_cutoff].state | int) }}"
+            value_template: "{{ (illuminance_currently == none) or (states[illuminance_currently].state | int < illuminance_cutoff | int) }}"
 
 
 
