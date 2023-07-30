@@ -1,7 +1,8 @@
 blueprint:
-  name: yama simon v2
+  name: Advanced Motion Lightning
   description: >
-    # YAMA V10
+    # Based on YAMA V10
+    -------------------
     Turn on lights or scenes when motion is detected. 
     
     Four different scenes can be defined depending on time of day.
@@ -12,15 +13,18 @@ blueprint:
     https://community.home-assistant.io/t/yama-yet-another-motion-automation-scenes-ambient-light-and-some-conditions/257062?u=networkingcat
     
     
-    Capabilitys:
+    Capabilities:
      - Trigger on motion (in fact can be triggered by anything that switches between “on” and off")
      - Wait time for turning off
+     - Illuminance cotrolled (optional)
      - Only run if entity is in desired state (optional)
      - Sun elevation check (optional)
      - 4 Scenes for different times of day (optional)
      - Ambient support with time frame (optional)
      - Default scene when motion stops (optional)
      - “no motion blocker” with user choosable state (optional)
+    
+    ---
   domain: automation
   source_url: https://gist.github.com/networkingcat/a1876d7e706e07c8bdcf974113940fb8
   input:
@@ -46,6 +50,7 @@ blueprint:
     illuminance_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: This input_number will be used to compare to the current illumination to determine if it is low.
+      default: 5
       selector:
         number:
           min: 0
