@@ -55,6 +55,7 @@ blueprint:
           min: 0
           max: 1000
           unit_of_measurement: lux
+          mode: box
     no_motion_wait:
       name: Wait time
       description: Time to leave the light on after last motion is detected.
