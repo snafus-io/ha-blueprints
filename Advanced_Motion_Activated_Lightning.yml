@@ -1,7 +1,7 @@
 blueprint:
   name: Advanced Motion-Activated Lightning
   description: >
-    # Based on YAMA V10
+    # Modified by MarphDE / Based on YAMA V10
     
     Turn on lights or scenes when motion is detected. 
     
