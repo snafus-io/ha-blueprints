@@ -22,7 +22,6 @@ blueprint:
      - Default scene when motion stops (optional)
      - “No motion blocker” with a user-choosable state (optional)
 
-
   domain: automation
   source_url: https://gist.github.com/networkingcat/a1876d7e706e07c8bdcf974113940fb8
   input:
@@ -48,11 +47,8 @@ blueprint:
           device_class: illuminance
     illuminance_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
-      description: This input_number will be used to compare to the current illumination to determine if it is low.
-      default:
-      selector:
-        entity:
-          domain: input_number
+      description: This value will be used to compare to the current illumination to determine if it is low.
+      default: 0
 #till here
     no_motion_wait:
       name: Wait time
@@ -225,7 +221,7 @@ action:
             value_template: "{{ trigger.to_state.state == 'on' }}" 
           #added from other blueprint
           - condition: template
-            value_template: "{{ (illuminance_currently == none) or (illuminance_cutoff == none) or (states[illuminance_currently].state | int < illuminance_cutoff | int) }}"
+            value_template: "{{ (illuminance_currently == none) or (states[illuminance_currently].state | int < illuminance_cutoff | int) }}"
           #till here
         sequence:
           - choose:
