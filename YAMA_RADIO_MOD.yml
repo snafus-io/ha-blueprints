@@ -49,11 +49,11 @@ blueprint:
     illuminance_cutoff:
       name: (OPTIONAL) Illuminance cutoff value
       description: This input_number will be used to compare to the current illumination to determine if it is low.
-      default:
+      default: 5
       selector:
         number:
-          initial: 5
-          mode: box
+          min: 0
+          max: 1000
           unit_of_measurement: lx
     no_motion_wait:
       name: Wait time
