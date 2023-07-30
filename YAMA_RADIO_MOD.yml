@@ -231,7 +231,8 @@ action:
               {{ (illuminance_currently == 'none' or states(illuminance_currently) == None) or 
                  (illuminance_cutoff == 'none' or states('input_number.' + illuminance_cutoff) == None) or 
                  (illuminance_currently != 'none' and states(illuminance_currently) != None and states('input_number.' + illuminance_cutoff) != None and 
-                 states(illuminance_currently) | float < states('input_number.' + illuminance_cutoff) | float) }}
+                 states(illuminance_currently).state | float < states('input_number.' + illuminance_cutoff).state | float) }}
+
 
 
             
