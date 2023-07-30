@@ -228,9 +228,9 @@ action:
           #added from other blueprint
           - condition: template
             value_template: >-
-              {{ (illuminance_currently == 'none') or 
-                 (illuminance_cutoff == 'none') or 
-                 (illuminance_current_value | float < illuminance_cutoff_value | float) }}
+              {{ (illuminance_currently == 'none' or states(illuminance_currently) == 'none') or 
+                 (illuminance_cutoff == 'none' or states('input_number.' + illuminance_cutoff) == 'none') or 
+                 (states(illuminance_currently) | float < states('input_number.' + illuminance_cutoff) | float) }}
 
             
           # value_template: "{{ (illuminance_currently == 'none') or (illuminance_cutoff_value == 'none') or (illuminance_current_value < illuminance_cutoff_value) }}"
