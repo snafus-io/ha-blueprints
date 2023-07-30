@@ -1,5 +1,5 @@
 blueprint:
-  name: Advanced Motion-Activated Lighting
+  name: Advanced Motion-Activated Lightning
   description: >
     # Modified by MarphDE / Based on YAMA V10
     
@@ -173,13 +173,14 @@ blueprint:
         entity:
           domain: scene
 
-
 mode: restart
 max_exceeded: silent
 
 variables:
-  illuminance_currently: "{{ illuminance_sensor if illuminance_sensor != 'none' else none }}"
-  illuminance_cutoff: "{{ illuminance_cutoff | int if illuminance_cutoff != 'none' else none }}"
+  illuminance_sensor_available: "{{ illuminance_sensor is defined and illuminance_sensor != 'none' }}"
+  illuminance_sensor_value: "{{ states[illuminance_sensor] if illuminance_sensor_available else none }}"
+  illuminance_cutoff_available: "{{ illuminance_cutoff is defined and illuminance_cutoff != 'none' }}"
+  illuminance_cutoff_value: "{{ illuminance_cutoff | int if illuminance_cutoff_available else none }}"
   scene_ambient: !input scene_ambient
   scene_morning: !input scene_morning
   scene_day: !input scene_day
@@ -189,9 +190,11 @@ variables:
   automation_blocker_boolean: !input automation_blocker_boolean
   no_motion_blocker: !input no_motion_blocker
   no_motion_blocker_boolean: !input no_motion_blocker_boolean
-  elevation_check: !input elevation_check
+  elevation_check_value: "{{ elevation_check | float if elevation_check != 'none' else none }}"
   scene_no_motion: !input scene_no_motion
   motion_entity: !input motion_entity
+  illuminance_sensor: !input illuminance_sensor
+  illuminance_cutoff: !input illuminance_cutoff
 
 trigger:
   - platform: state
@@ -215,7 +218,7 @@ condition:
       - "{{ not automation_blocker_boolean and states[automation_blocker].state == 'off' }}"
   # Check if elevation input exists or is below the desired value, otherwise do not run
   - condition: template
-    value_template: "{{ (elevation_check == none) or (state_attr('sun.sun','elevation') <= elevation_check | float(90)) }}"
+    value_template: "{{ (elevation_check == none) or (state_attr('sun.sun','elevation') <= elevation_check_value | float(90)) }}"
  
 
 action:
@@ -230,8 +233,8 @@ action:
               # Check if illuminance_sensor is a valid entity and its state is less than illuminance_cutoff
               - condition: template
                 value_template: >-
-                  {% if illuminance_sensor != 'none' and illuminance_cutoff != 'none' and states[illuminance_sensor] is not none %}
-                    {{ states[illuminance_sensor].state | float < illuminance_cutoff | float }}
+                  {% if illuminance_sensor_available and illuminance_cutoff_available %}
+                    {{ illuminance_sensor_value | float < illuminance_cutoff_value }}
                   {% else %}
                     true
                   {% endif %}
