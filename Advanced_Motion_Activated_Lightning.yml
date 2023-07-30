@@ -195,7 +195,6 @@ variables:
   illuminance_sensor: !input illuminance_sensor
   illuminance_cutoff: !input illuminance_cutoff
 
-
 trigger:
   - platform: state
     entity_id: !input motion_entity
