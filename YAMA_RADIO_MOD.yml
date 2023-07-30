@@ -362,12 +362,15 @@ action:
               
       - conditions: "{{ now().strftime('%H:%M:%S') >= morning_time and now().strftime('%H:%M:%S') < daytime_time }}"
         sequence:
-          - service: media_player.turn_on
-            entity_id: !input radio_target
           - service: media_player.volume_set
-            entity_id: !input radio_target
-            data:
-              volume_level: "{{ (daytime_volume|float) / 100 }}"
+                  entity_id: !input radio_target
+                  data:
+                    volume_level: "{{ (daytime_volume|float) / 100 }}"
+                - service: media_player.play_media
+                  data:
+                    entity_id: !input radio_target
+                    media_content_id: "{{ states('input_text.radio_url.state') }}"
+                    media_content_type: "music"
               
       - conditions: "{{ now().strftime('%H:%M:%S') >= daytime_time and now().strftime('%H:%M:%S') < evening_time }}"
         sequence:
@@ -380,8 +383,11 @@ action:
             default:
               - service: light.turn_on
                 target: !input light_target
-              - service: media_player.turn_on
-                entity_id: !input radio_target
+              - service: media_player.play_media
+                  data:
+                    entity_id: !input radio_target
+                    media_content_id: "{{ states('input_text.radio_url.state') }}"
+                    media_content_type: "music"
       # Trigger to state = "off"
       - conditions:
           - condition: template
