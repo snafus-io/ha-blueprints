@@ -2,7 +2,7 @@ blueprint:
   name: Advanced Motion-Activated Lightning
   description: >
     # Based on YAMA V10
-    -------------------
+    
     Turn on lights or scenes when motion is detected. 
     
     Four different scenes can be defined depending on time of day.
@@ -16,7 +16,7 @@ blueprint:
     Capabilities:
      - Trigger on motion (in fact can be triggered by anything that switches between “on” and off")
      - Wait time for turning off
-     - Illuminance cotrolled (optional)
+     - Illuminance controlled (optional)
      - Only run if entity is in desired state (optional)
      - Sun elevation check (optional)
      - 4 Scenes for different times of day (optional)
