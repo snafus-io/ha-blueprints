@@ -224,7 +224,14 @@ condition:
       - "{{ illuminance_cutoff == 'none' }}"
       - "{{ illuminance_currently == 'unknown' }}"
       - "{{ illuminance_cutoff == 'unknown' }}"
-      - "{{ states[illuminance_currently].state | float < states[illuminance_cutoff].state | float }}"
+      - >-
+        {%- if states[illuminance_currently].state | float and states[illuminance_cutoff].state | float -%}
+          {%- set illum_current = states[illuminance_currently].state | float -%}
+          {%- set illum_cutoff = states[illuminance_cutoff].state | float -%}
+          {{ illum_current < illum_cutoff }}
+        {%- else -%}
+          false
+        {%- endif -%}
 
 action:
   - choose:
