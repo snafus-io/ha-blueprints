@@ -53,6 +53,8 @@ blueprint:
       selector:
         number:
           min: 0
+          initial: 5
+          max: 254
           unit_of_measurement: lx
     no_motion_wait:
       name: Wait time
