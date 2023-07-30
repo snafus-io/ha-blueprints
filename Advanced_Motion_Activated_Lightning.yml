@@ -192,6 +192,9 @@ variables:
   elevation_check: !input elevation_check
   scene_no_motion: !input scene_no_motion
   motion_entity: !input motion_entity
+  illuminance_sensor: !input illuminance_sensor
+  illuminance_cutoff: !input illuminance_cutoff
+
 
 trigger:
   - platform: state
