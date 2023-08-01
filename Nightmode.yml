@@ -45,7 +45,7 @@ variables:
   all_lights: "{{ states.light | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
   all_switches: "{{ states.switch | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
   lights_on: "{{ lights_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
-  switches_on: "{{ 'Alle Schalter einschalten' in switches_to_keep_on | ternary(all_switches, switches_to_keep_on) | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  switches_on: "{{ all_switches if 'Alle Schalter einschalten' in switches_to_keep_on else switches_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
   lights_off: "{{ all_lights | reject('in', lights_on) | list }}"
   switches_off: "{{ all_switches | reject('in', switches_on) | list }}"
 
