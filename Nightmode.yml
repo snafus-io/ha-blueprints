@@ -1,0 +1,71 @@
+blueprint:
+  name: Routine - Nachtmodus
+  description: >
+    Schaltet bestimmte Lampen und Schalter aus, wenn der Nachtmodus aktiviert wird.
+
+  domain: automation
+  input:
+    night_mode_entity:
+      name: Nachtmodus-Schalter
+      description: Der Schalter, der den Nachtmodus aktiviert/deaktiviert.
+      selector:
+        entity:
+    lights_to_keep_on:
+      name: Lampen die an bleiben
+      description: Wählen Sie die Lampen aus, die eingeschaltet bleiben sollen.
+      selector:
+        target:
+          entity:
+            domain: light
+    switches_to_keep_on:
+      name: Schalter die an bleiben
+      description: Wählen Sie die Schalter aus, die eingeschaltet bleiben sollen, oder wählen Sie "Alle" für alle Schalter einschalten.
+      selector:
+        target:
+          entity:
+            domain: switch
+            options: 
+              - "Alle"
+    light_blocker_entity:
+      name: Blocker für Lampen (Optional)
+      description: Die Lampen werden nicht ausgeschaltet, wenn dieser Schalter den angegebenen Zustand hat.
+      default: none
+      selector:
+        entity:
+    switch_blocker_entity:
+      name: Blocker für Schalter (Optional)
+      description: Die Schalter werden nicht ausgeschaltet, wenn dieser Schalter den angegebenen Zustand hat.
+      default: none
+      selector:
+        entity:
+
+mode: restart
+max_exceeded: silent
+
+variables:
+  all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
+  all_switches: "{{ states.switch | map(attribute='entity_id') | list }}"
+  lights_on: "{{ lights_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  switches_on: "{{ switches_to_keep_on == 'Alle' | ternary(all_switches, switches_to_keep_on) | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  lights_off: "{{ all_lights | difference(lights_on) | reject('undefined') | list }}"
+  switches_off: "{{ all_switches | difference(switches_on) | reject('undefined') | list }}"
+
+trigger:
+  - platform: state
+    entity_id: !input night_mode_entity
+    to: "on"
+  - platform: state
+    entity_id: !input night_mode_entity
+    to: "off"
+
+action:
+  - choose:
+      # Nachtmodus aktiviert
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.state == 'on' }}"
+        sequence:
+          - service: light.turn_off
+            entity_id: "{{ lights_off | difference([light_blocker_entity]) | reject('undefined') | list }}"
+          - service: switch.turn_off
+            entity_id: "{{ switches_off | difference([switch_blocker_entity]) | reject('undefined') | list }}"
