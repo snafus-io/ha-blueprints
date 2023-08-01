@@ -67,10 +67,22 @@ action:
         sequence:
           # Lights ausschalten
           - service: light.turn_off
-            entity_id: "{{ lights_off | difference([light_blocker_entity]) | join(',') }}"
+            data:
+              entity_id: >
+                {% for entity in lights_off %}
+                  {% if entity != light_blocker_entity %}
+                    {{ entity }},
+                  {% endif %}
+                {% endfor %}
           # Switches ausschalten
           - service: switch.turn_off
-            entity_id: "{{ switches_off | difference([switch_blocker_entity]) | join(',') }}"
+            data:
+              entity_id: >
+                {% for entity in switches_off %}
+                  {% if entity != switch_blocker_entity %}
+                    {{ entity }},
+                  {% endif %}
+                {% endfor %}
 
 
 
