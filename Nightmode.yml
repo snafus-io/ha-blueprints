@@ -20,11 +20,13 @@ blueprint:
     switches_to_keep_on:
       name: Schalter die an bleiben
       description: Wählen Sie die Schalter aus, die eingeschaltet bleiben sollen, oder wählen Sie "Alle" für alle Schalter einschalten.
+      default: "Alle"  # Standardwert auf "Alle" gesetzt
       selector:
         target:
           entity:
             domain: switch
-      default: "Alle"  # Standardwert auf "Alle" gesetzt
+            entity_id:
+              - "Alle"  # Option "Alle" hinzugefügt, um alle Schalter einzuschalten
 
     light_blocker_entity:
       name: Blocker für Lampen (Optional)
