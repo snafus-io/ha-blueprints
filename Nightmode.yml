@@ -19,18 +19,12 @@ blueprint:
             domain: light
     switches_to_keep_on:
       name: Schalter die an bleiben
-      description: Wählen Sie die Schalter aus, die eingeschaltet bleiben sollen.
+      description: Wählen Sie die Schalter aus, die eingeschaltet bleiben sollen, oder wählen Sie "Alle Schalter einschalten" für alle Schalter einschalten.
+      default: "Alle Schalter einschalten"  # Standardwert auf "Alle Schalter einschalten" gesetzt
       selector:
         target:
           entity:
             domain: switch
-    all_switches_on:
-      name: Alle Schalter einschalten
-      description: Wenn ausgewählt, bleiben alle Schalter eingeschaltet.
-      default: false
-      selector:
-        boolean:
-
     light_blocker_entity:
       name: Blocker für Lampen (Optional)
       description: Die Lampen werden nicht ausgeschaltet, wenn dieser Schalter den angegebenen Zustand hat.
@@ -51,7 +45,7 @@ variables:
   all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
   all_switches: "{{ states.switch | map(attribute='entity_id') | list }}"
   lights_on: "{{ lights_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
-  switches_on: "{{ all_switches if all_switches_on else switches_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  switches_on: "{{ all_switches if is_state('input_boolean.all_switches_on', 'on') else switches_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
   lights_off: "{{ all_lights | difference(lights_on) | reject('undefined') | list }}"
   switches_off: "{{ all_switches | difference(switches_on) | reject('undefined') | list }}"
 
