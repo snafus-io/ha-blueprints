@@ -66,6 +66,7 @@ action:
             value_template: "{{ trigger.to_state.state == 'on' }}"
         sequence:
           - service: light.turn_off
-            entity_id: "{{ lights_off | difference([light_blocker_entity]) | reject('undefined') | list }}"
+            entity_id: "{{ lights_off | difference([light_blocker_entity]) | join(',') }}"
           - service: switch.turn_off
-            entity_id: "{{ switches_off | difference([switch_blocker_entity]) | reject('undefined') | list }}"
+            entity_id: "{{ switches_off | difference([switch_blocker_entity]) | join(',') }}"
+
