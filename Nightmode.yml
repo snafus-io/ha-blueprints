@@ -42,12 +42,13 @@ mode: restart
 max_exceeded: silent
 
 variables:
-  all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
-  all_switches: "{{ states.switch | map(attribute='entity_id') | list }}"
+  all_lights: "{{ states.light | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  all_switches: "{{ states.switch | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
   lights_on: "{{ lights_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
-  switches_on: "{{ all_switches if is_state('input_boolean.all_switches_on', 'on') else switches_to_keep_on | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
-  lights_off: "{{ all_lights | difference(lights_on) | reject('undefined') | list }}"
-  switches_off: "{{ all_switches | difference(switches_on) | reject('undefined') | list }}"
+  switches_on: "{{ 'Alle Schalter einschalten' in switches_to_keep_on | ternary(all_switches, switches_to_keep_on) | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list }}"
+  lights_off: "{{ all_lights | reject('in', lights_on) | list }}"
+  switches_off: "{{ all_switches | reject('in', switches_on) | list }}"
+
 
 trigger:
   - platform: state
