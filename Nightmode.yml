@@ -65,8 +65,18 @@ action:
           - condition: template
             value_template: "{{ trigger.to_state.state == 'on' }}"
         sequence:
-          - service: light.turn_off
-            entity_id: "{{ lights_off | difference([light_blocker_entity]) | join(',') }}"
-          - service: switch.turn_off
-            entity_id: "{{ switches_off | difference([switch_blocker_entity]) | join(',') }}"
+          - choose:
+              # Lights ausschalten
+              - conditions:
+                  - "{{ lights_off | difference([light_blocker_entity]) | list }}"
+                sequence:
+                  - service: light.turn_off
+                    entity_id: "{{ lights_off | difference([light_blocker_entity]) | join(',') }}"
+              # Switches ausschalten
+              - conditions:
+                  - "{{ switches_off | difference([switch_blocker_entity]) | list }}"
+                sequence:
+                  - service: switch.turn_off
+                    entity_id: "{{ switches_off | difference([switch_blocker_entity]) | join(',') }}"
+
 
