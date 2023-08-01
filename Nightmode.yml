@@ -80,3 +80,4 @@ action:
                     entity_id: "{{ switches_off | difference([switch_blocker_entity]) | join(',') }}"
 
 
+
