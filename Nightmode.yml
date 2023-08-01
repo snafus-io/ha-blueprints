@@ -74,15 +74,17 @@ action:
                     {{ entity }},
                   {% endif %}
                 {% endfor %}
-          # Switches ausschalten
+          # Switches ausschalten, wenn Schalter-Entität ausgewählt wurde
           - service: switch.turn_off
             data:
               entity_id: >
-                {% for entity in switches_off %}
-                  {% if entity != switch_blocker_entity %}
-                    {{ entity }},
-                  {% endif %}
-                {% endfor %}
+                {% if 'Alle Schalter einschalten' not in switches_to_keep_on %}
+                  {% for entity in switches_off %}
+                    {% if entity != switch_blocker_entity %}
+                      {{ entity }},
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
 
 
 
